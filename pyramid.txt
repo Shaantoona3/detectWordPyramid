@@ -1,0 +1,93 @@
+/*
+web service that takes in a string and returns a boolean to indicate whether
+a word is a pyramid word. A word is a ‘pyramid’ word if you can arrange
+the letters in increasing frequency, starting with 1 and continuing without
+gaps and without duplicates.
+Examples:
+banana is a pyramid word because you have 1 'b', 2 'n's, and 3 'a's....
+*/
+#include <iostream>
+#include <stdlib.h>
+
+struct Lletter
+{
+    char letter;
+    int frequency;
+};
+
+struct letterlist
+{
+   struct Lletter *S;
+   int length;
+};
+
+struct letterlist add(struct letterlist L, char c)
+{
+    struct Lletter *temp;
+    struct Lletter  tmp;
+    int i, j, index, min, num;
+    bool is=false;
+    //checking if letter is on the list
+    for(i=0;i<L.length && !is;i++)
+    if(L.S[i].letter==c)
+    {
+        num=i;
+        is=1;
+    }
+    //if is frequency updated
+    if(is) L.S[num].frequency++; else
+    { //if is not updating list
+        temp=new struct Lletter[L.length+1];
+        for(i=0;i<L.length;i++) temp[i]=L.S[i];
+        L.length++;
+        temp[L.length-1].letter=c;
+        temp[L.length-1].frequency=1;
+        L.S=temp;
+    }
+    //sorting list
+        for(i=0;i<L.length;i++)
+        {
+            min=L.S[i].frequency;
+            index=i;
+            for(j=i+1;j<L.length;j++)
+            if(L.S[j].frequency<min)
+            {
+                index=j;
+                min=L.S[j].frequency;
+            }
+            if(index!=i)
+            {
+                tmp=L.S[i];
+                L.S[i]=L.S[index];
+                L.S[index]=tmp;
+            }
+        }
+
+  return L;
+}
+
+bool ispyramid(struct letterlist L)
+{
+    int i;
+    bool ok=(L.S[0].frequency==1);
+    for(i=1;i<L.length && ok;i++) if(L.S[i].frequency-L.S[i-1].frequency!=1) ok=false;
+    return ok;
+}
+
+int main()
+{
+ int i;
+ std::string W;
+ struct letterlist L;
+ L.S=NULL;
+ L.length=0;
+
+ std::cout << "type string: ";
+ std::cin >> W;
+ for(i=0;i<W.size();i++) L=add(L, W[i]);
+ for(i=0;i<L.length;i++) std::cout << L.S[i].letter << " " << L.S[i].frequency << std::endl;
+ if(ispyramid(L)) std::cout << "Inputed word is pyramid word\n"; else
+                  std::cout << "Inputed word is not pyramid word\n";
+ system("pause");
+}
+
