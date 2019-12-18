@@ -88,6 +88,6 @@ int main()
  for(i=0;i<L.length;i++) std::cout << L.S[i].letter << " " << L.S[i].frequency << std::endl;
  if(ispyramid(L)) std::cout << "Inputed word is pyramid word\n"; else
                   std::cout << "Inputed word is not pyramid word\n";
- system("pause");
+ 
 }
 
